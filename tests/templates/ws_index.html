@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <input id="message_input" type="text" placeholder="Enter a message">
+    <button id="send_button">Send</button>
+    <ul id="message_list"></ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+    <script type="text/javascript">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('message', function(data) {
+            var ul = document.getElementById('message_list');
+            var li = document.createElement('li');
+            li.appendChild(document.createTextNode(data));
+            ul.appendChild(li);
+        });
+
+        document.getElementById('send_button').onclick = function() {
+            var message = document.getElementById('message_input').value;
+            socket.send(message);
+            document.getElementById('message_input').value = '';
+        };
+    </script>
+</body>
+</html>
