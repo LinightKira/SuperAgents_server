@@ -8,7 +8,7 @@ class Config:
     MYSQL_PORT = 3306
     MYSQL_DATA_BASE = 'SuperAgents'
     MYSQL_USER = 'root'  # root
-    MYSQL_PWD = '1111111'  # Freedom7
+    MYSQL_PWD = '1111111'  # 
     MYSQL_URI = f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PWD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATA_BASE}?charset=utf8'
 
     # wx_app
