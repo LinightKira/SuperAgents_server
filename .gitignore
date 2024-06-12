@@ -9,9 +9,13 @@ lerna-debug.log*
 
 fssl.key
 fssl.pem
+config.py
+
+__pycache__
 
 workspace
 migrations
+venv
 
 node_modules
 dist
@@ -28,3 +32,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
