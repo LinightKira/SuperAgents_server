@@ -8,7 +8,7 @@ RUN pip install -r requirements.txt
 
 COPY app_server app_server
 COPY app_memory app_memory
-COPY app_agent app_agent
+#COPY app_agent app_agent
 COPY feishu_utils feishu_utils
 #COPY MetaGPT MetaGPT
 #
