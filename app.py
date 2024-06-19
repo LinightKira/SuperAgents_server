@@ -1,7 +1,7 @@
 import threading
 
 from app_server import app
-from server.feishu_utils.feishu_robot_server import feishu_robot_start
+from feishu_utils.feishu_robot_server import feishu_robot_start
 
 if __name__ == '__main__':
     # 开一个线程 处理消息

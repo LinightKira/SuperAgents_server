@@ -10,10 +10,10 @@ from http import HTTPStatus
 
 from flask import request, jsonify, Blueprint
 
-from server.app_server.tools.dify.dify_request import make_dify_request, response_streaming
-from server.config import Config
-from server.app_server.db import mgdb
-from server.feishu_utils.feishu_reply_message import reply_msg_text
+from app_server.tools.dify.dify_request import make_dify_request, response_streaming
+from config import Config
+from app_server.db import mgdb
+from feishu_utils.feishu_reply_message import reply_msg_text
 
 assistant_bp = Blueprint('assistant', __name__)
 

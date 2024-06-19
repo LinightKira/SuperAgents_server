@@ -5,10 +5,10 @@ from flask import Flask, request
 from flask_migrate import Migrate
 from flask_cors import CORS
 
-from server.app_server.db import db
+from app_server.db import db
 from config import Config
 
-from server.app_server.routes.assistant import assistant_bp
+from app_server.routes.assistant import assistant_bp
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)

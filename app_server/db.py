@@ -2,8 +2,8 @@ from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 
-from server.app_memory.mongo import ChatDatabase
-from server.config import Config
+from app_memory.mongo import ChatDatabase
+from config import Config
 
 db = SQLAlchemy()
 mgdb = ChatDatabase(db_name=Config.MONGODB_DBNAME, collection_name=Config.MONGODB_COLLECTION_NAME,
