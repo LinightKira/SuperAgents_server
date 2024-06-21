@@ -38,7 +38,8 @@ def make_dify_request(api_key, payload, mode='chat'):
     }
     # print('payload:', payload)
     # print('headers:', headers)
-    # print('url:', url)
+    print('dify url:', url)
+
     response = requests.post(url, headers=headers, json=payload, stream=isStreaming)
 
     return response

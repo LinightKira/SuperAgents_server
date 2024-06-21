@@ -10,6 +10,7 @@ lerna-debug.log*
 fssl.key
 fssl.pem
 config.py
+docker-compose.yaml
 
 __pycache__
 

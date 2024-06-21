@@ -26,4 +26,4 @@ CMD ["flask","db","upgrade"]
 CMD ["python", "app.py"]
 
 
-#docker run -v ${PWD}/config.py:/home/app/config.py  -p 5000:5000 superast
+#docker run -v ${PWD}/config.py:/home/app/config.py  -p 5000:5000 suas

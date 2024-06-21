@@ -10,6 +10,7 @@ from http import HTTPStatus
 
 from flask import request, jsonify, Blueprint
 
+import config
 from app_server.tools.dify.dify_request import make_dify_request, response_streaming
 from config import Config
 from app_server.db import mgdb
@@ -20,6 +21,7 @@ assistant_bp = Blueprint('assistant', __name__)
 
 @assistant_bp.route('/assistant/main', methods=['POST'])
 def assistant_main():
+    print('assistant main:=======================')
     try:
         data = request.get_json()
         input_data = data.get('content')
@@ -42,7 +44,7 @@ def assistant_main():
 
 # 处理用户输入
 async def assistant_input_process(input_data, msg_id):
-    session_id = '725169db-a757-41d1-a912-3194023e3625'
+    session_id = Config.SESSION_ID
     mgdb.create_message(session_id, {'type': 'text', 'content': input_data, 'role': 'user'})
     api_key = Config.DIFY_AGENT_KEY
     # 构造请求参数

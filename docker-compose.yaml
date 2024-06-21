@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  suas:
+    image: suas:0.0.1
+    container_name: suas
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data/superAgents/config.py:/home/app/config.py
+    restart: always
+
+
