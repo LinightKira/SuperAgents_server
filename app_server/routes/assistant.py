@@ -11,7 +11,7 @@ from http import HTTPStatus
 from flask import request, jsonify, Blueprint
 
 import config
-from app_server.tools.dify.dify_request import make_dify_request, response_streaming
+from app_server.tools.dify.dify_request import make_dify_request, response_streaming, parse_response
 from config import Config
 from app_server.db import mgdb
 from feishu_utils.feishu_reply_message import reply_msg_text
@@ -44,15 +44,19 @@ def assistant_main():
 
 # 处理用户输入
 async def assistant_input_process(input_data, msg_id):
-    session_id = Config.SESSION_ID
-    mgdb.create_message(session_id, {'type': 'text', 'content': input_data, 'role': 'user'})
+    print('input_data:', input_data)
+    if input_data == '{"text":"clean"}':
+        Config.SESSION_ID = ''
+        reply_msg_text(msg_id, "done")
+        return
+
     api_key = Config.DIFY_AGENT_KEY
     # 构造请求参数
     payload = {
         "inputs": {},
         "query": input_data,
         "response_mode": "streaming",
-        "conversation_id": session_id,
+        "conversation_id": Config.SESSION_ID,
         "user": "123456"
     }
     # 请求参数分类
@@ -62,10 +66,13 @@ async def assistant_input_process(input_data, msg_id):
         print('response:', response.text)
         return
 
-    final_answer = response_streaming(response)
+    # final_answer = response_streaming(response)
+    final_answer = parse_response(response)
+
     print('response answer:', final_answer)
+    mgdb.create_message(Config.SESSION_ID, {'type': 'text', 'content': input_data, 'role': 'user'})
     reply_msg_text(msg_id, final_answer)
-    mgdb.create_message(session_id, {'type': 'text', 'content': final_answer, 'role': 'assistant'})
+    mgdb.create_message(Config.SESSION_ID, {'type': 'text', 'content': final_answer, 'role': 'assistant'})
 
 
 # 处理多线程运行异步函数

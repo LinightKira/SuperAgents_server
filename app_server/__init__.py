@@ -5,7 +5,7 @@ from flask import Flask, request
 from flask_migrate import Migrate
 from flask_cors import CORS
 
-from app_server.db import db
+# from app_server.db import db
 from config import Config
 
 from app_server.routes.assistant import assistant_bp
@@ -44,14 +44,14 @@ def log_response_info(response):
 # 注册路由
 app.register_blueprint(assistant_bp)
 
-# 连接数据库
-with app.app_context():
-    # 初始化数据库
-    db.init_app(app)
-    # db.drop_all() #删除所有的表
-    # db.create_all()  # 创建所有的表
-
-migrate = Migrate(app, db)
+# # 连接数据库
+# with app.app_context():
+#     # 初始化数据库
+#     db.init_app(app)
+#     # db.drop_all() #删除所有的表
+#     # db.create_all()  # 创建所有的表
+#
+# migrate = Migrate(app, db)
 
 
 @app.route('/')

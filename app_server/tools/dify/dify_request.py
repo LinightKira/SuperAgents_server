@@ -27,10 +27,7 @@ def make_dify_request(api_key, payload, mode='chat'):
     else:
         raise ValueError("Invalid mode. Use 'completion' or 'chat'.")
 
-    # print('url:', url)
-
     isStreaming = payload.get('response_mode') == 'streaming'
-    # print('isStreaming:', isStreaming)
 
     headers = {
         'Authorization': f'Bearer {api_key}',
@@ -77,3 +74,28 @@ def response_streaming(response):
             incomplete_chunk = b''
     print('content:', content)
     return content
+
+
+def parse_response(response):
+    # 获取response的文本内容
+    response_text = response.text
+
+    conversation_id = None
+
+    # 分割并解析每行JSON数据
+    answers = []
+    for line in response_text.strip().split('\n'):
+        if line.startswith('data: '):
+            json_data = json.loads(line[6:])
+            if 'conversation_id' in json_data and conversation_id is None:
+                conversation_id = json_data['conversation_id']
+            if 'answer' in json_data:
+                answers.append(json_data['answer'])
+
+    if config.Config.SESSION_ID == '':
+        config.Config.SESSION_ID = conversation_id
+
+    # 拼接所有的answer
+    full_answer = ''.join(answers)
+
+    return full_answer
