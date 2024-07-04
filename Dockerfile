@@ -26,4 +26,6 @@ CMD ["flask","db","upgrade"]
 CMD ["python", "app.py"]
 
 
-#docker run -v ${PWD}/config.py:/home/app/config.py  -p 5000:5000 suas
+
+# docker build -t suas:0.0.1 .
+# docker run -p 5000:5000 --name suas -v /home/superAgents/SuperAgents_server/config.py:/home/app/config.py -d suas:0.0.1

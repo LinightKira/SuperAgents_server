@@ -3,6 +3,7 @@ import json
 import requests
 
 import config
+from feishu_utils.feishu_upload_image import upload_image
 
 """
 Generate a POST request to the DIFY API based on the provided API key, payload, and mode.
@@ -35,7 +36,7 @@ def make_dify_request(api_key, payload, mode='chat'):
     }
     # print('payload:', payload)
     # print('headers:', headers)
-    print('dify url:', url)
+    # print('dify url:', url)
 
     response = requests.post(url, headers=headers, json=payload, stream=isStreaming)
 
@@ -79,11 +80,12 @@ def response_streaming(response):
 def parse_response(response):
     # 获取response的文本内容
     response_text = response.text
-
+    print('response_text:', response_text)
     conversation_id = None
 
     # 分割并解析每行JSON数据
     answers = []
+    images = []
     for line in response_text.strip().split('\n'):
         if line.startswith('data: '):
             json_data = json.loads(line[6:])
@@ -91,6 +93,8 @@ def parse_response(response):
                 conversation_id = json_data['conversation_id']
             if 'answer' in json_data:
                 answers.append(json_data['answer'])
+            if json_data.get('event') == 'message_file':
+                images.append(json_data['url'])
 
     if config.Config.SESSION_ID == '':
         config.Config.SESSION_ID = conversation_id
@@ -98,4 +102,41 @@ def parse_response(response):
     # 拼接所有的answer
     full_answer = ''.join(answers)
 
-    return full_answer
+    if images:
+        # 生成富文本内容
+        content = []
+        if full_answer:
+            content.append([{"tag": "text", "text": full_answer}])
+        for img_url in images:
+            res = upload_image(config.Config.DIFY_HOST + img_url)
+
+            # 解析JSON字符串
+            res_dict = json.loads(res)
+
+            # 检查code的值
+            if res_dict["code"] == 0:
+                content.append([{"tag": "img", "image_key": res_dict['data']['image_key']}])
+            else:
+                print(f"code: {res_dict['code']}, msg: {res_dict['msg']}")
+                content.append([{"tag": "text", "text": f"code: {res_dict['code']}, msg: {res_dict['msg']}"}])
+
+        full_content = json.dumps({
+            "zh_cn": {
+                "content": content
+            }
+        }, ensure_ascii=False)
+
+        msgContent = {
+            "msg_type": "post",
+            "content": full_content
+        }
+    else:
+        full_answer = json.dumps({"text": full_answer}, ensure_ascii=False)
+        msgContent = {
+            "msg_type": "text",
+            "content": full_answer
+        }
+
+    print('msgContent:', msgContent)
+
+    return msgContent

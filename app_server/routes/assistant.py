@@ -10,7 +10,6 @@ from http import HTTPStatus
 
 from flask import request, jsonify, Blueprint
 
-import config
 from app_server.tools.dify.dify_request import make_dify_request, response_streaming, parse_response
 from config import Config
 from app_server.db import mgdb
@@ -72,7 +71,7 @@ async def assistant_input_process(input_data, msg_id):
     print('response answer:', final_answer)
     mgdb.create_message(Config.SESSION_ID, {'type': 'text', 'content': input_data, 'role': 'user'})
     reply_msg_text(msg_id, final_answer)
-    mgdb.create_message(Config.SESSION_ID, {'type': 'text', 'content': final_answer, 'role': 'assistant'})
+    mgdb.create_message(Config.SESSION_ID, {'type': final_answer['msg_type'], 'content': final_answer['content'], 'role': 'assistant'})
 
 
 # 处理多线程运行异步函数

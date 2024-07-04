@@ -7,7 +7,7 @@ import config
 
 
 def do_p2_im_message_receive_v1(data: lark.im.v1.P2ImMessageReceiveV1) -> None:
-    print(f'[ do_p2_im_message_receive_v1 access ], data: {lark.JSON.marshal(data, indent=4)}')
+    # print(f'[ do_p2_im_message_receive_v1 access ], data: {lark.JSON.marshal(data, indent=4)}')
     print('message id', data.event.message.message_id)
     print('content', data.event.message.content)
     send_msg_to_server(data.event.message.message_id, data.event.message.content)
@@ -41,15 +41,22 @@ def send_msg_to_server(message_id, content):
         'content': content
     }
 
-    # 发送POST请求
-    response = requests.post(url, headers=headers, data=json.dumps(payload))
+    print('send mes to server:', payload)
 
-    # 检查请求是否成功
-    if response.status_code == 200:
-        print('Success:', response.text)
-    else:
-        print('Failed:', response.text)
+    try:
+        # 发送POST请求
+        response = requests.post(url, headers=headers, data=json.dumps(payload))
+
+        # 检查请求是否成功
+        if response.status_code == 200:
+            print('Success:', response.text)
+        else:
+            print('Failed:', response.text)
+
+    except requests.exceptions.RequestException as e:
+        print('An error occurred:', e)
 
 
 if __name__ == "__main__":
     feishu_robot_start()
+    send_msg_to_server("oc_a42bdfd8d242298ef167a018418cc172", "你好，你好")
