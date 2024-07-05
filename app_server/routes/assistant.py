@@ -46,7 +46,11 @@ async def assistant_input_process(input_data, msg_id):
     print('input_data:', input_data)
     if input_data == '{"text":"clean"}':
         Config.SESSION_ID = ''
-        reply_msg_text(msg_id, "done")
+        msgContent = {
+            "msg_type": "text",
+            "content": 'done'
+        }
+        reply_msg_text(msg_id, msgContent)
         return
 
     api_key = Config.DIFY_AGENT_KEY
